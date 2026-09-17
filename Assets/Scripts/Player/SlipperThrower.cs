@@ -1,41 +1,33 @@
 using System.Collections;
 using UnityEngine;
 
-public class SlipperThrow : MonoBehaviour
+public class SlipperThrower : MonoBehaviour
 {
-    // =========================================================
-    // THROW SETUP
-    // =========================================================
-
+    [Header("Throw Setup")]
     public GameObject slipperPrefab;
     public Transform throwPoint;
     public Camera playerCamera;
 
-    // =========================================================
-    // THROW SETTINGS
-    // =========================================================
-
+    [Header("Throw Settings")]
     public float throwForce = 15f;
     public float throwCooldown = 2f;
 
     private bool canThrow = true;
 
     // =========================================================
-    // UPDATE
+    // UPDATE - PC INPUT
     // =========================================================
 
-    private void Update()
+    void Update()
     {
-        // Make sure GameManager exists
         if (GameManager.Instance == null)
             return;
 
-        // Player can ONLY throw while the game state is Playing
         if (GameManager.Instance.currentState !=
             GameManager.GameState.Playing)
             return;
 
-        // Throw slipper when left mouse button is clicked
+        // PC mouse control
         if (Input.GetMouseButtonDown(0) && canThrow)
         {
             StartCoroutine(ThrowRoutine());
@@ -43,7 +35,26 @@ public class SlipperThrow : MonoBehaviour
     }
 
     // =========================================================
-    // THROW COOLDOWN
+    // MOBILE THROW BUTTON
+    // =========================================================
+
+    public void MobileThrow()
+    {
+        if (GameManager.Instance == null)
+            return;
+
+        if (GameManager.Instance.currentState !=
+            GameManager.GameState.Playing)
+            return;
+
+        if (!canThrow)
+            return;
+
+        StartCoroutine(ThrowRoutine());
+    }
+
+    // =========================================================
+    // THROW ROUTINE
     // =========================================================
 
     private IEnumerator ThrowRoutine()
@@ -58,45 +69,40 @@ public class SlipperThrow : MonoBehaviour
     }
 
     // =========================================================
-    // THROW SLIPPER
+    // CREATE AND THROW SLIPPER
     // =========================================================
 
     private void ThrowSlipper()
     {
-        // Check slipper prefab
         if (slipperPrefab == null)
         {
-            Debug.LogError("Slipper Prefab is not assigned!");
+            Debug.LogError("Slipper Prefab is missing!");
             return;
         }
 
-        // Check throw point
         if (throwPoint == null)
         {
-            Debug.LogError("Throw Point is not assigned!");
+            Debug.LogError("Throw Point is missing!");
             return;
         }
 
-        // Check camera
         if (playerCamera == null)
         {
-            Debug.LogError("Player Camera is not assigned!");
+            Debug.LogError("Player Camera is missing!");
             return;
         }
 
-        // Create slipper
         GameObject slipper = Instantiate(
             slipperPrefab,
             throwPoint.position,
             throwPoint.rotation
         );
 
-        // Get Rigidbody
-        Rigidbody rb = slipper.GetComponent<Rigidbody>();
+        Rigidbody rb =
+            slipper.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
-            // Throw slipper forward
             rb.AddForce(
                 playerCamera.transform.forward * throwForce,
                 ForceMode.Impulse
@@ -104,7 +110,9 @@ public class SlipperThrow : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Slipper prefab has no Rigidbody!");
+            Debug.LogError(
+                "Slipper prefab has no Rigidbody!"
+            );
         }
     }
 }
