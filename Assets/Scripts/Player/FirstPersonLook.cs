@@ -7,14 +7,16 @@ public class FirstPersonLook : MonoBehaviour
 
     private float xRotation = 0f;
 
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
 
     void Update()
     {
+        if (GameManager.Instance == null)
+    return;
+
+if (GameManager.Instance.currentState !=
+    GameManager.GameState.Playing)
+    return;
+
         float mouseX = Input.GetAxis("Mouse X") *
                        mouseSensitivity * Time.deltaTime;
 

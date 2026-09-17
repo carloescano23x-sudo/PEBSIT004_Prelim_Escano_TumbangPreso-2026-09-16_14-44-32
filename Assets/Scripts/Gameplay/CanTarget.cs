@@ -18,23 +18,30 @@ public class CanTarget : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+private void OnCollisionEnter(Collision collision)
+{
+    if (hasBeenHit)
+        return;
+
+    if (collision.gameObject.CompareTag("Slipper"))
     {
-        if (hasBeenHit)
-            return;
+        Slipper slipper = collision.gameObject.GetComponent<Slipper>();
 
-        if (collision.gameObject.CompareTag("Slipper"))
+        if (slipper != null)
         {
-            hasBeenHit = true;
-
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.AddScore(10);
-            }
-
-            StartCoroutine(ResetCan());
+            slipper.MarkAsHit();
         }
+
+        hasBeenHit = true;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore(10);
+        }
+
+        StartCoroutine(ResetCan());
     }
+}
 
     IEnumerator ResetCan()
     {
