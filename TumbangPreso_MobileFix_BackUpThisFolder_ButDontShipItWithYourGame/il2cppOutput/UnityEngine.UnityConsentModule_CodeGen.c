@@ -33,13 +33,13 @@ static Il2CppTokenAdjustorThunkPair s_adjustorThunks[2] =
 };
 static const int32_t s_InvokerIndices[7] = 
 {
-	10267,
-	7694,
-	10267,
-	9808,
-	15561,
-	15719,
-	15302,
+	10268,
+	7695,
+	10268,
+	9809,
+	15565,
+	15723,
+	15306,
 };
 IL2CPP_EXTERN_C const Il2CppCodeGenModule g_UnityEngine_UnityConsentModule_CodeGenModule;
 const Il2CppCodeGenModule g_UnityEngine_UnityConsentModule_CodeGenModule = 

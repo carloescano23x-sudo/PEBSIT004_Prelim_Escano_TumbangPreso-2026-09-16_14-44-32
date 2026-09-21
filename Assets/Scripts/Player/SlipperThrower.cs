@@ -22,6 +22,9 @@ public class SlipperThrower : MonoBehaviour
     public float throwForce = 15f;
     public float throwCooldown = 2f;
 
+    // Distance used when aiming through the center of the screen.
+    public float aimDistance = 100f;
+
     // =========================================================
     // MOBILE UI
     // =========================================================
@@ -240,25 +243,92 @@ public class SlipperThrower : MonoBehaviour
         Rigidbody rb =
             slipper.GetComponent<Rigidbody>();
 
-        if (rb != null)
-        {
-            // Throw toward the center
-            // of the player's camera.
-            rb.AddForce(
-                playerCamera.transform.forward *
-                throwForce,
-                ForceMode.Impulse
-            );
-        }
-        else
+        if (rb == null)
         {
             Debug.LogError(
                 "Slipper prefab has no Rigidbody!"
             );
 
-            // Destroy broken projectile.
             Destroy(slipper);
+
+            return;
         }
+
+        // -----------------------------------------------------
+        // AIM THROUGH CENTER OF SCREEN / CROSSHAIR
+        // -----------------------------------------------------
+
+        // 0.5, 0.5 is the exact center of the camera view.
+        Ray aimRay =
+            playerCamera.ViewportPointToRay(
+                new Vector3(
+                    0.5f,
+                    0.5f,
+                    0f
+                )
+            );
+
+        Vector3 targetPoint;
+
+        RaycastHit hit;
+
+        // Check if the center of the screen is pointing
+        // directly at an object.
+        if (Physics.Raycast(
+            aimRay,
+            out hit,
+            aimDistance,
+            ~0,
+            QueryTriggerInteraction.Ignore
+        ))
+        {
+            // Aim directly at the point under the crosshair.
+            targetPoint = hit.point;
+        }
+        else
+        {
+            // If the crosshair is pointing at the sky or
+            // empty space, create a target far in front.
+            targetPoint =
+                aimRay.origin +
+                aimRay.direction *
+                aimDistance;
+        }
+
+        // -----------------------------------------------------
+        // CALCULATE THROW DIRECTION
+        // -----------------------------------------------------
+
+        // The slipper starts at ThrowPoint, so calculate
+        // the direction FROM ThrowPoint TO the point that
+        // the crosshair is actually aiming at.
+        Vector3 throwDirection =
+            (
+                targetPoint -
+                throwPoint.position
+            ).normalized;
+
+        // -----------------------------------------------------
+        // ROTATE SLIPPER TOWARD THROW DIRECTION
+        // -----------------------------------------------------
+
+        if (throwDirection != Vector3.zero)
+        {
+            slipper.transform.rotation =
+                Quaternion.LookRotation(
+                    throwDirection
+                );
+        }
+
+        // -----------------------------------------------------
+        // APPLY THROW FORCE
+        // -----------------------------------------------------
+
+        rb.AddForce(
+            throwDirection *
+            throwForce,
+            ForceMode.Impulse
+        );
     }
 
     // =========================================================

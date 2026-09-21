@@ -219,6 +219,7 @@ RectTransform:
   - {fileID: 1540839995}
   - {fileID: 636174513}
   - {fileID: 1691267698}
+  - {fileID: 223275185}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -794,12 +795,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223275184}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 941920208}
+  m_Father: {fileID: 6810157}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1122,6 +1123,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1197,7 +1199,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: -9}
+  m_LocalPosition: {x: 0, y: 1.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1260,8 +1262,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0aefd62c342a547883e2a2e72cca1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirstPersonLook
-  mouseSensitivity: 150
+  mouseSensitivity: 100
   playerBody: {fileID: 1388608720}
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e6d2fe25c61644906c396d48b668a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MobileLook
+  playerBody: {fileID: 1388608720}
+  playerCamera: {fileID: 330585545}
+  horizontalSensitivity: 0.12
+  verticalSensitivity: 0.1
+  minimumVerticalAngle: -30
+  maximumVerticalAngle: 30
 --- !u!1 &388570253
 GameObject:
   m_ObjectHideFlags: 0
@@ -2968,7 +2988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.74509805}
+  m_Color: {r: 0.05882353, g: 0.078431375, b: 0.09803922, a: 0.74509805}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3471,7 +3491,6 @@ RectTransform:
   m_Children:
   - {fileID: 447869633}
   - {fileID: 1506550477}
-  - {fileID: 223275185}
   - {fileID: 1894673905}
   - {fileID: 320849622}
   - {fileID: 1079025354}
@@ -3491,7 +3510,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941920207}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -5459,6 +5478,7 @@ MonoBehaviour:
   playerCamera: {fileID: 330585545}
   throwForce: 15
   throwCooldown: 2
+  aimDistance: 100
   throwButton: {fileID: 494549421}
 --- !u!114 &1388608722
 MonoBehaviour:
@@ -5474,8 +5494,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MobileLook
   playerBody: {fileID: 1388608720}
   playerCamera: {fileID: 330585545}
-  touchSensitivity: 0.025
-  smoothing: 0.2
+  horizontalSensitivity: 0.12
+  verticalSensitivity: 0.1
   minimumVerticalAngle: -35
   maximumVerticalAngle: 35
 --- !u!1 &1390227380

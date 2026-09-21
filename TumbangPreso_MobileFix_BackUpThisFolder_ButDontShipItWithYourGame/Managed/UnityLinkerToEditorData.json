@@ -64,7 +64,9 @@
           },
           {
             "name": "AudioClip",
-            "scenes": [],
+            "scenes": [
+              "Assets/Scenes/GameScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },
@@ -84,8 +86,18 @@
           },
           {
             "name": "AudioResource",
-            "scenes": [],
-            "dependencyType": 1,
+            "scenes": [
+              "Assets/Scenes/GameScene.unity"
+            ],
+            "dependencyType": 0,
+            "icon": null
+          },
+          {
+            "name": "AudioSource",
+            "scenes": [
+              "Assets/Scenes/GameScene.unity"
+            ],
+            "dependencyType": 0,
             "icon": null
           },
           {
@@ -408,6 +420,14 @@
             "name": "ShaderNameRegistry",
             "scenes": [],
             "dependencyType": 1,
+            "icon": null
+          },
+          {
+            "name": "SkinnedMeshRenderer",
+            "scenes": [
+              "Assets/Scenes/GameScene.unity"
+            ],
+            "dependencyType": 0,
             "icon": null
           },
           {

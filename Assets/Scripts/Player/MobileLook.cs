@@ -8,188 +8,182 @@ public class MobileLook : MonoBehaviour
     public Camera playerCamera;
 
     [Header("Mobile Look Settings")]
-    [Range(0.01f, 0.20f)]
-    public float touchSensitivity = 0.035f;
+    [Range(0.01f, 1f)]
+    public float horizontalSensitivity = 0.12f;
 
     [Range(0.01f, 1f)]
-    public float smoothing = 0.20f;
+    public float verticalSensitivity = 0.10f;
 
     [Header("Look Limits")]
-    public float minimumVerticalAngle = -35f;
-    public float maximumVerticalAngle = 35f;
+    public float minimumVerticalAngle = -30f;
+    public float maximumVerticalAngle = 30f;
 
     private float verticalRotation = 0f;
-
-    private Vector2 currentLookDelta;
-    private Vector2 smoothLookDelta;
-
     private int aimingFingerId = -1;
+
+    void Start()
+    {
+        if (playerCamera != null)
+        {
+            verticalRotation =
+                NormalizeAngle(
+                    playerCamera.transform.localEulerAngles.x
+                );
+
+            verticalRotation =
+                Mathf.Clamp(
+                    verticalRotation,
+                    minimumVerticalAngle,
+                    maximumVerticalAngle
+                );
+        }
+    }
 
     void Update()
     {
         if (GameManager.Instance == null)
-        {
             return;
-        }
 
         if (GameManager.Instance.currentState !=
             GameManager.GameState.Playing)
         {
-            ResetTouch();
+            aimingFingerId = -1;
             return;
         }
 
 #if UNITY_ANDROID || UNITY_IOS
-
-        HandleMobileLook();
-
+        HandleTouchLook();
 #endif
     }
 
-    // =========================================================
-    // MOBILE LOOK
-    // =========================================================
-
-    private void HandleMobileLook()
+    private void HandleTouchLook()
     {
+        // No fingers = absolutely no camera movement.
         if (Input.touchCount == 0)
         {
-            ResetTouch();
+            aimingFingerId = -1;
             return;
         }
 
-        Touch? aimingTouch = null;
+        // -----------------------------------------------------
+        // FIND OR KEEP ONE AIMING FINGER
+        // -----------------------------------------------------
 
-        // -----------------------------------------------------
-        // FIND / KEEP AIMING FINGER
-        // -----------------------------------------------------
+        Touch? aimingTouch = null;
 
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch touch = Input.GetTouch(i);
 
-            // Continue using the same aiming finger
+            // Keep using the same finger.
             if (touch.fingerId == aimingFingerId)
             {
                 aimingTouch = touch;
                 break;
             }
 
-            // Find a new finger for aiming
+            // Select a new finger only when it first touches.
             if (aimingFingerId == -1 &&
                 touch.phase == TouchPhase.Began)
             {
-                // Ignore UI touches such as THROW and PAUSE
+                // Never use UI touches for aiming.
                 if (IsTouchOverUI(touch.fingerId))
-                {
                     continue;
-                }
 
                 aimingFingerId = touch.fingerId;
                 aimingTouch = touch;
-
                 break;
             }
         }
 
+        // Our aiming finger disappeared.
         if (!aimingTouch.HasValue)
         {
+            aimingFingerId = -1;
             return;
         }
 
-        Touch activeTouch = aimingTouch.Value;
+        Touch touchToUse = aimingTouch.Value;
 
         // -----------------------------------------------------
-        // RELEASE AIMING FINGER
+        // RELEASE
         // -----------------------------------------------------
 
-        if (activeTouch.phase == TouchPhase.Ended ||
-            activeTouch.phase == TouchPhase.Canceled)
+        if (touchToUse.phase == TouchPhase.Ended ||
+            touchToUse.phase == TouchPhase.Canceled)
         {
-            ResetTouch();
+            aimingFingerId = -1;
             return;
         }
 
-        // -----------------------------------------------------
-        // MOVE CAMERA
-        // -----------------------------------------------------
-
-        if (activeTouch.phase == TouchPhase.Moved)
-        {
-            Vector2 rawDelta =
-                activeTouch.deltaPosition *
-                touchSensitivity;
-
-            smoothLookDelta = Vector2.Lerp(
-                smoothLookDelta,
-                rawDelta,
-                1f - smoothing
-            );
-
-            currentLookDelta = smoothLookDelta;
-
-            ApplyLook(currentLookDelta);
-        }
-    }
-
-    // =========================================================
-    // APPLY CAMERA MOVEMENT
-    // =========================================================
-
-    private void ApplyLook(Vector2 lookDelta)
-    {
-        if (playerBody == null ||
-            playerCamera == null)
-        {
+        // Only rotate while finger actually moves.
+        if (touchToUse.phase != TouchPhase.Moved)
             return;
-        }
 
-        // Horizontal rotation
-        playerBody.Rotate(
-            Vector3.up * lookDelta.x
-        );
+        // -----------------------------------------------------
+        // DIRECT TOUCH MOVEMENT
+        // -----------------------------------------------------
 
-        // Vertical rotation
-        verticalRotation -= lookDelta.y;
+        float lookX =
+            touchToUse.deltaPosition.x *
+            horizontalSensitivity;
 
-        verticalRotation = Mathf.Clamp(
-            verticalRotation,
-            minimumVerticalAngle,
-            maximumVerticalAngle
-        );
+        float lookY =
+            touchToUse.deltaPosition.y *
+            verticalSensitivity;
 
-        playerCamera.transform.localRotation =
-            Quaternion.Euler(
-                verticalRotation,
+        // Prevent an unusually large touch delta from
+        // causing a sudden camera jump.
+        lookX = Mathf.Clamp(lookX, -4f, 4f);
+        lookY = Mathf.Clamp(lookY, -3f, 3f);
+
+        // Horizontal rotation.
+        if (playerBody != null)
+        {
+            playerBody.Rotate(
                 0f,
-                0f
+                lookX,
+                0f,
+                Space.Self
             );
-    }
+        }
 
-    // =========================================================
-    // CHECK UI
-    // =========================================================
+        // Vertical rotation.
+        if (playerCamera != null)
+        {
+            verticalRotation -= lookY;
+
+            verticalRotation =
+                Mathf.Clamp(
+                    verticalRotation,
+                    minimumVerticalAngle,
+                    maximumVerticalAngle
+                );
+
+            playerCamera.transform.localRotation =
+                Quaternion.Euler(
+                    verticalRotation,
+                    0f,
+                    0f
+                );
+        }
+    }
 
     private bool IsTouchOverUI(int fingerId)
     {
         if (EventSystem.current == null)
-        {
             return false;
-        }
 
-        return EventSystem.current
-            .IsPointerOverGameObject(fingerId);
+        return EventSystem.current.IsPointerOverGameObject(
+            fingerId
+        );
     }
 
-    // =========================================================
-    // RESET
-    // =========================================================
-
-    private void ResetTouch()
+    private float NormalizeAngle(float angle)
     {
-        aimingFingerId = -1;
+        if (angle > 180f)
+            angle -= 360f;
 
-        currentLookDelta = Vector2.zero;
-        smoothLookDelta = Vector2.zero;
+        return angle;
     }
 }

@@ -335,6 +335,11 @@ UnityEngine.AudioClip::get_frequency_Injected
 UnityEngine.AudioClip::get_samples_Injected
 UnityEngine.AudioSettings::StartAudioOutput
 UnityEngine.AudioSettings::StopAudioOutput
+UnityEngine.AudioSource::PlayHelper_Injected
+UnityEngine.AudioSource::PlayOneShotHelper_Injected
+UnityEngine.AudioSource::set_generatorObject_Injected
+UnityEngine.AudioSource::set_loop_Injected
+UnityEngine.AudioSource::set_volume_Injected
 UnityEngine.Awaitable::IsNativeAwaitableCompleted
 UnityEngine.Awaitable::ReleaseNativeAwaitable
 UnityEngine.Behaviour::get_enabled_Injected
@@ -375,6 +380,7 @@ UnityEngine.Camera::ScreenToViewportPoint_Injected
 UnityEngine.Camera::SetStereoProjectionMatrix_Injected
 UnityEngine.Camera::SetStereoViewMatrix_Injected
 UnityEngine.Camera::SetupCurrent_Injected
+UnityEngine.Camera::ViewportPointToRay_Injected
 UnityEngine.Camera::ViewportToWorldPoint_Injected
 UnityEngine.Camera::WorldToScreenPoint_Injected
 UnityEngine.Camera::get_backgroundColor_Injected
@@ -1410,6 +1416,7 @@ UnityEngine.Screen::get_height
 UnityEngine.Screen::get_width
 UnityEngine.Screen::get_dpi
 UnityEngine.Screen::SetMSAASamples
+UnityEngine.Screen::get_safeArea_Injected
 UnityEngine.Screen::GetScreenOrientation
 UnityEngine.ScriptableObject::CreateScriptableObjectInstanceFromType_Injected
 UnityEngine.ScriptableObject::CreateScriptableObject
