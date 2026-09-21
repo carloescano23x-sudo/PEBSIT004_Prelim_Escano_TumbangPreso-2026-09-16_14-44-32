@@ -254,6 +254,11 @@ Android APK build: SUCCESSFUL
 
 The game was successfully built as an Android APK, installed on an Android mobile device, and tested using touch controls.
 
+## Download Android APK
+
+The Android APK is available from the GitHub Releases section.
+
+Open the latest release and download `TumbangPreso.apk`.
 ---
 
 ## Testing
