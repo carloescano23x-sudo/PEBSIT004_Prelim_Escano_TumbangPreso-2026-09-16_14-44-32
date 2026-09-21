@@ -1,79 +1,55 @@
 # Tumbang Preso: First-Person Challenge
 
-## Project Concept
+## Project Overview
 
-Tumbang Preso: First-Person Challenge is a 3D first-person mobile game based on the traditional Filipino game Tumbang Preso. The player aims and throws a slipper at a can while trying to earn points before losing all lives or running out of time.
+Tumbang Preso: First-Person Challenge is a 3D first-person mobile game based on the traditional Filipino game Tumbang Preso.
+
+The player aims at a can using a first-person camera and throws a slipper to knock it down. A successful hit gives 10 points, while a missed throw removes one life. The player starts with three lives and has 60 seconds to earn as many points as possible.
+
+The game was developed using Unity and is designed primarily for Android mobile devices.
+
+---
+
+## Category
+
+Philippine Games and Sports
+
+---
 
 ## Intended Users
 
-The game is intended for students and casual mobile players who want a simple digital adaptation of a traditional Filipino game.
+The game is intended for students and casual mobile players who want to experience a simple digital adaptation of the traditional Filipino game Tumbang Preso.
+
+---
 
 ## Development Environment
 
 - Unity 6
 - C#
 - Universal Render Pipeline (URP)
-- Android
-- Visual Studio / VS Code
-- Git and GitHub
+- Android Build Support
+- Git
+- GitHub
+- Windows development environment
 
-## Project Structure
+---
 
-- Assets/Art - visual assets
-- Assets/Materials - game materials
-- Assets/Models - imported 3D models
-- Assets/Prefabs - reusable game objects
-- Assets/Scenes - Unity scenes
-- Assets/Scripts - gameplay and system scripts
-- Assets/Sounds - audio assets
-- Assets/UI - interface-related assets
+## Game Features
 
-## How to Run
+The project includes:
 
-1. Open the project using the compatible Unity version.
-2. Open Assets/Scenes/GameScene.
-3. Press Play to test the game in the Unity Editor.
-4. For Android, select Android in Build Profiles and build the project as an APK.
-
-## Controls
-
-### PC / Unity Editor
-
-- Mouse movement - Aim
-- Left Mouse Button - Throw slipper
-- Pause button / configured pause input - Pause game
-
-### Android
-
-- Swipe on an empty part of the screen - Aim
-- THROW button - Throw slipper
-- PAUSE button - Pause game
-
-## Gameplay
-
-- Hit the Can: +10 points
-- Miss: -1 life
-- Starting lives: 3
-- Round duration: 60 seconds
-- Easy difficulty: 0-29 points
-- Medium difficulty: 30-59 points
-- Hard difficulty: 60+ points
-
-The Can changes position and resets faster as the difficulty increases.
-
-## Completed Features
-
-- Loading screen
-- Ready/start screen
+- 3D first-person gameplay
 - First-person aiming
-- Mobile touch aiming
-- Slipper throwing
-- Can collision detection
+- Center crosshair
+- Physics-based slipper throwing
+- Can hit detection
 - Score system
 - Lives system
-- Round timer
+- 60-second round timer
 - Dynamic difficulty
 - Dynamic Can positions
+- Loading screen
+- Ready / Start screen
 - Pause and Resume
 - Game Over
 - Play Again
@@ -81,33 +57,409 @@ The Can changes position and resets faster as the difficulty increases.
 - Hit and miss feedback
 - Sound effects
 - Background music
-- Android interface
+- PC controls for Unity Editor testing
+- Android touch controls
 - Android APK build
-- 3D environment and visual assets
+
+---
+
+## Gameplay Rules
+
+The player starts with:
+
+- Score: 0
+- Lives: 3
+- Time: 60 seconds
+- Difficulty: Easy
+
+### Successful Hit
+
+When the slipper successfully hits the Can:
+
+- +10 points are added.
+- Hit feedback is displayed.
+- A hit sound effect is played.
+- The Can moves to another available position.
+
+### Miss
+
+When a thrown slipper misses:
+
+- 1 life is deducted.
+- Miss feedback is displayed.
+- A miss sound effect is played.
+
+### Game Over
+
+The game ends when:
+
+- The player's lives reach 0, or
+- The 60-second timer reaches 0.
+
+The Game Over screen displays the final score and locally stored best score.
+
+---
+
+## Difficulty System
+
+Difficulty automatically changes according to the player's score.
+
+### Easy
+
+Score:
+
+0–29
+
+The Can uses the central target positions and has the longest reset delay.
+
+### Medium
+
+Score:
+
+30–59
+
+Additional Can positions become available and the reset delay becomes shorter.
+
+### Hard
+
+Score:
+
+60+
+
+All configured Can positions may be used and the Can resets faster.
+
+---
+
+## Controls
+
+### Unity Editor / PC
+
+- Mouse Movement — Aim
+- Left Mouse Button — Throw slipper
+- Pause control — Pause gameplay
+
+The `FirstPersonLook` script is used for Editor and standalone PC camera control.
+
+### Android
+
+- Drag / Swipe on the gameplay area — Aim
+- THROW button — Throw slipper
+- PAUSE button — Pause gameplay
+- RESUME button — Continue gameplay
+
+The `MobileLook` script handles touch-based camera control on Android.
+
+---
+
+## Project Structure
+
+Important project folders include:
+
+Assets/
+- Art — visual game assets
+- Materials — materials used by game objects
+- Models — imported 3D models
+- Prefabs — reusable game objects
+- Scenes — Unity scenes
+- Scripts — C# game scripts
+- Sounds — game audio
+- UI — interface-related assets
+
+Documentation/
+- Planning — project planning and design documentation
+- Testing — testing and troubleshooting records
+- Screenshots — project and gameplay evidence
+
+---
+
+## Important Game Components
+
+### GameManager
+
+Controls:
+
+- Game states
+- Score
+- Lives
+- Timer
+- Difficulty
+- UI updates
+- Pause / Resume
+- Game Over
+- Restart
+- Best score
+
+### SlipperThrower
+
+Creates and throws the slipper toward the position indicated by the center crosshair.
+
+### Slipper
+
+Determines whether a thrown slipper successfully hits the Can or becomes a missed throw.
+
+### CanTarget
+
+Handles successful Can hits, Can resetting, target positions, and difficulty-related reset behavior.
+
+### FirstPersonLook
+
+Handles mouse-based camera aiming during Unity Editor and PC testing.
+
+### MobileLook
+
+Handles touch-based camera aiming on Android devices.
+
+### AudioManager
+
+Controls background music and gameplay sound effects.
+
+---
+
+## How to Run the Project
+
+1. Clone or download the project repository.
+2. Open the project using the compatible Unity version.
+3. Allow Unity to import and compile the project files.
+4. Open:
+
+   Assets/Scenes/GameScene.unity
+
+5. Press the Play button in Unity.
+6. Press START GAME to begin.
+
+---
+
+## Android Build
+
+To create the Android version:
+
+1. Open the Unity project.
+2. Go to File > Build Profiles.
+3. Select Android.
+4. Make sure GameScene is included in the scene list.
+5. Select Android as the active build platform.
+6. Build the project.
+7. Save the generated application as:
+
+   TumbangPreso.apk
+
+8. Install the APK on an Android device.
+9. Launch the game and test the touch controls.
+
+---
 
 ## Build Status
 
-The project was successfully built as an Android APK and tested on an Android mobile device.
+Android APK build: SUCCESSFUL
 
-## Known Issues / Limitations
+The game was successfully built as an Android APK, installed on an Android mobile device, and tested using touch controls.
 
-- Touch sensitivity may feel slightly different depending on the Android device and screen size.
-- The game uses a single main gameplay environment.
-- The best score is stored locally on the device.
-- The game does not use an online leaderboard, database, or multiplayer service.
+---
+
+## Testing
+
+Testing was performed for:
+
+- Project opening
+- Main scene loading
+- Ready / Start screen
+- PC camera input
+- Android touch input
+- Slipper throwing
+- Can hit detection
+- Score updates
+- Miss and life deduction
+- Can repositioning
+- Difficulty changes
+- Round timer
+- Pause
+- Resume
+- Game Over
+- Play Again
+- Audio
+- Android APK generation
+- Android installation and launch
+- Testing after corrections
+
+Detailed testing information is available in:
+
+Documentation/Testing/Test-Record.md
+
+---
 
 ## Troubleshooting
 
-During development, the Android camera became unstable because PC mouse-look and mobile touch-look controls could interfere with camera rotation. The controls were separated by platform so FirstPersonLook is used for PC/Editor testing while MobileLook handles Android touch input.
+Several issues were identified and corrected during development.
 
-Another issue caused lives to decrease without a throw because a Slipper object was permanently present in the scene. The scene object was removed and slippers are now instantiated only when the player throws.
+### Mobile Camera Drifting
 
-## Assets
+During Android testing, the camera became unstable and difficult to control.
 
-The project uses a combination of student-created Unity primitives, materials, UI elements, audio, and authorized third-party 3D assets.
+The PC `FirstPersonLook` and Android `MobileLook` controls were separated by platform. Mouse-look code now runs only for Unity Editor / standalone PC testing, while `MobileLook` controls the camera on Android.
 
-Third-party assets should retain their original creator/source/license information where required.
+Mobile aiming was tested again and the drifting problem was resolved.
 
-## Next Steps
+### Automatic Life Loss
 
-Possible future improvements include additional environments, improved animations, more difficulty options, additional sound and visual effects, settings for sensitivity and audio, and further optimization for different Android devices.
+The player previously lost one life without throwing a slipper.
+
+A Slipper GameObject had accidentally remained permanently inside the scene. Its script eventually processed itself as a missed projectile.
+
+The scene instance was removed so slippers are now created only when the player performs an actual throw.
+
+### Android Build Issue
+
+An Android build problem occurred after changes to script/component layouts.
+
+Unity-generated cache data was refreshed while the project's Assets, Packages, and ProjectSettings were preserved. The project was reopened and the Android build was successfully completed.
+
+Additional troubleshooting information is available in:
+
+Documentation/Testing/Issue-Record.md
+
+---
+
+## Completed Features
+
+The following major features are completed:
+
+- Game environment
+- First-person camera
+- Mobile touch aiming
+- PC Editor aiming
+- Slipper throwing
+- Crosshair-based aiming
+- Can target
+- Hit detection
+- Miss detection
+- Score
+- Lives
+- Timer
+- Difficulty
+- Dynamic Can positions
+- Loading state
+- Ready state
+- Playing state
+- Pause / Resume
+- Game Over
+- Restart / Play Again
+- Local best score
+- Gameplay feedback
+- Sound effects
+- Background music
+- Android interface
+- Android APK build
+- Android device testing
+
+---
+
+## Limitations / Incomplete Features
+
+The current version does not include:
+
+- Online multiplayer
+- Online leaderboard
+- Online database
+- Server-side services
+
+The best score is stored locally on the device.
+
+Touch sensitivity may also feel different depending on the Android device and screen size.
+
+These limitations do not prevent the main Tumbang Preso gameplay from functioning.
+
+---
+
+## Assets and Credits
+
+The project uses a combination of student-created content, Unity-created objects, and authorized third-party assets.
+
+Student-created content includes:
+
+- Gameplay implementation
+- Game logic
+- User interface arrangement
+- Game-state implementation
+- Court/gameplay layout
+- C# scripts
+- Materials and Unity primitive-based objects created for the project
+
+Third-party assets used in the project should be credited using their original asset information.
+
+### Third-Party Asset Credits
+
+Add the downloaded assets used in the final project below:
+
+Asset Name:Bench (LowPoly)
+Creator:3dMuffin
+Source:Sketchfab
+License:CC Attribution
+
+Asset Name:Goku (Super Saiyan 3)
+Creator:DrewsDigitalDesigns
+Source:Sketchfab
+License:CC Attribution
+
+Asset Name:Kid Buu
+Creator:Igli Faslija
+Source:Sketchfab
+License:CC Attribution-NonCommercial
+
+Asset Name:Abandoned Playground
+Creator:sergeilihandristov
+Source:Sketchfab
+License:CC Attribution
+
+Asset Name:Modular Urban Fence Pack (w/ graffiti textures)
+Creator:TampaJoey
+Source:Sketchfab
+License:CC Attribution
+
+Asset Name:cobblestone ground - lowpoly
+Creator:SPLEEN VISION
+Source:Sketchfab
+License:CC Attribution
+
+## Documentation
+
+Project documentation is located in:
+
+Documentation/
+
+This contains:
+
+- Planning and Design
+- Final Test Record
+- Issue and Troubleshooting Record
+- Screenshots / Evidence
+
+---
+
+## Known Issues
+
+No critical gameplay issue is currently known to prevent the game from being played.
+
+Minor differences in touch sensitivity may occur depending on the Android device and display size.
+
+---
+
+## Future Improvements
+
+Possible future improvements include:
+
+- Adjustable touch sensitivity
+- Additional environments
+- Additional gameplay modes
+- Improved animations
+- Additional visual effects
+- Additional sound effects
+- More difficulty options
+- Additional Android device testing
+- Performance optimization
+- Additional accessibility settings
+
+---
+
+## Project Status
+
+Tumbang Preso: First-Person Challenge is a functional Unity mobile game prototype with completed core gameplay, Android touch controls, game-state management, testing documentation, troubleshooting records, and a successful Android APK build.
