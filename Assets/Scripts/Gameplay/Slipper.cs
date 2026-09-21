@@ -2,61 +2,177 @@ using UnityEngine;
 
 public class Slipper : MonoBehaviour
 {
-    private bool hitCan = false;
+    // =========================================================
+    // SLIPPER SETTINGS
+    // =========================================================
+
+    [Header("Slipper Settings")]
+    public float lifetime = 5f;
+
+    // =========================================================
+    // PRIVATE VARIABLES
+    // =========================================================
+
     private bool resultProcessed = false;
+    private bool successfulHit = false;
+
+    // =========================================================
+    // PUBLIC RESULT CHECK
+    // =========================================================
+
+    public bool ResultProcessed
+    {
+        get
+        {
+            return resultProcessed;
+        }
+    }
+
+    public bool SuccessfulHit
+    {
+        get
+        {
+            return successfulHit;
+        }
+    }
+
+    // =========================================================
+    // START
+    // =========================================================
 
     private void Start()
     {
-        // Check whether the slipper missed after 5 seconds
-        Invoke(nameof(CheckResult), 5f);
+        // Backup miss detection.
+        Invoke(
+            nameof(CheckResult),
+            lifetime
+        );
     }
 
-    // Called by CanTarget when the slipper hits the can
-    public void MarkAsHit()
-    {
-        if (resultProcessed)
-            return;
+    // =========================================================
+    // COLLISION DETECTION
+    // =========================================================
 
-        hitCan = true;
+    private void OnCollisionEnter(
+        Collision collision
+    )
+    {
+        // Once this slipper already has a result,
+        // it cannot create another result.
+        if (resultProcessed)
+        {
+            return;
+        }
+
+        // Ground contact = immediate miss.
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            RegisterMiss();
+        }
+    }
+
+    // =========================================================
+    // MARK AS HIT
+    // =========================================================
+
+    public bool MarkAsHit()
+    {
+        // If this slipper already missed or already hit,
+        // the can must NOT award points.
+        if (resultProcessed)
+        {
+            return false;
+        }
+
+        successfulHit = true;
         resultProcessed = true;
 
-        CancelInvoke(nameof(CheckResult));
+        CancelInvoke(
+            nameof(CheckResult)
+        );
 
-        Debug.Log("CAN HIT!");
+        Debug.Log(
+            "SLIPPER HIT REGISTERED"
+        );
 
+        // CanTarget owns the +10 score.
+        Destroy(
+            gameObject,
+            1f
+        );
+
+        // Tell CanTarget this was a valid hit.
+        return true;
+    }
+
+    // =========================================================
+    // REGISTER MISS
+    // =========================================================
+
+    private void RegisterMiss()
+    {
+        if (resultProcessed)
+        {
+            return;
+        }
+
+        resultProcessed = true;
+        successfulHit = false;
+
+        CancelInvoke(
+            nameof(CheckResult)
+        );
+
+        Debug.Log(
+            "SLIPPER MISS REGISTERED"
+        );
+
+        // Play miss sound.
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMissSound();
+        }
+
+        // Remove one life.
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.AddScore(10);
+            GameManager.Instance.LoseLife();
         }
         else
         {
-            Debug.LogError("GameManager was not found!");
+            Debug.LogError(
+                "GameManager was not found!"
+            );
         }
 
-        // Remove slipper shortly after hitting
-        Destroy(gameObject, 1f);
+        // IMPORTANT:
+        // Destroy immediately so a missed slipper
+        // cannot bounce into the can afterward.
+        Destroy(
+            gameObject
+        );
     }
+
+    // =========================================================
+    // BACKUP MISS CHECK
+    // =========================================================
 
     private void CheckResult()
     {
         if (resultProcessed)
-            return;
-
-        resultProcessed = true;
-
-        if (!hitCan)
         {
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.LoseLife();
-            }
-            else
-            {
-                Debug.LogError("GameManager was not found!");
-            }
+            return;
         }
 
-        // Remove slipper after the miss is processed
-        Destroy(gameObject);
+        RegisterMiss();
+    }
+
+    // =========================================================
+    // CLEANUP
+    // =========================================================
+
+    private void OnDestroy()
+    {
+        CancelInvoke();
     }
 }

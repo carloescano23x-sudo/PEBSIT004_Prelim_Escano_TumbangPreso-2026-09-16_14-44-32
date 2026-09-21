@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Slipper
   - Can
+  - Ground
   layers:
   - Default
   - TransparentFX
